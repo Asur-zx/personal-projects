@@ -1,45 +1,48 @@
-    
+#send data to visual.cpp using subprocess.run('filepath.exe') from here
 import pyaudio
-import subprocess
 import wave
+import numpy as np
+import subprocess
+import os
+def playaudio(raw_file):
+    file='file.wav'
+    CHUNK=1024
+    wf=wave.open(file, 'rb')
+    p=pyaudio.PyAudio()
+    subprocess.run(['ffmpeg', '-i', raw_file, file])
 
-def play_mp3_with_pyaudio(file_path):
-    # Convert MP3 to WAV using ffmpeg
-    wav_file_path = "temp.wav"
-    subprocess.run(["ffmpeg", "-i", file_path, wav_file_path])
+    stream=p.open(format=p.get_format_from_width(wf.getsampwidth()), rate=wf.getframerate(), channels=wf.getnchannels(), output=True)#get samplewidth from file and get format from it
+    data=wf.readframes(CHUNK)
+    mag_array=np.array([],dtype=np.int16)
+    freq_array=np.array([],dtype=np.int16)
 
-    # Initialize PyAudio
-    p = pyaudio.PyAudio()
+    os.system('cls')
 
-    # Open a stream
-    
-
-    # Read and play the WAV file
-    with wave.open(wav_file_path, 'rb') as wav_file:#here using *with open() will open only file and does not allow to return framerate, but wave.open allows
-    	framerate = wav_file.getframerate()
-    	stream = p.open(format=p.get_format_from_width(2),
-                    channels=wav_file.getnchannels(),
-                    rate=framerate,
-                    output=True)
-    	
-    	print(f'Frame rate: {framerate} Hz')
-
-    	wav_data = wav_file.readframes(1024)#readframes instead of read
-    	while wav_data:
-        	stream.write(wav_data)
-        	wav_data = wav_file.readframes(1024)
+    while len(data)>0: 
+        frames=np.frombuffer(data, dtype=np.int16)
+        fftresult=np.fft.fft(frames)#convert time domain samples to freq domain->magnitude as amplitude and dirn as phase
+        frequences=np.fft.fftfreq(len(fftresult), 1.0/wf.getframerate())#length of fftreasult and inverst of framerate->distance betn adjacent data points
+        freq_array=np.concatenate((freq_array,frequences))
+        mag_spectrum=np.abs(fftresult) #magnitude of fftresult gives frequescies
+        #print(mag_spectrum)
+        mag_array=np.concatenate((mag_array,mag_spectrum))
 
 
-    # Cleanup
+        #frames=(frames*1).astype(np.int16)  to increase volume
+        stream.write(frames.tobytes())
+        print(frequences,"####################", mag_spectrum)
+        #stream.write(data)
+        data=wf.readframes(CHUNK)
+
+    print(mag_array)
+    print(freq_array)
+    finalplot(freq_array, mag_array)
+
     stream.stop_stream()
     stream.close()
+
     p.terminate()
 
-    # Remove temporary WAV file
-    subprocess.run(["rm", wav_file_path])
-
-# File path of the MP3 file you want to play
-mp3_file_path = "f:\\folder\\folder\\STORAGE\\MUSICS\\Centuries - Fall Out Boy.m4a"
-
-# Play the MP3 file
-play_mp3_with_pyaudio(mp3_file_path)
+def finalplot(freqs, mags):
+    pass
+playaudio("C:/Users/Acer/Music/I Ain't Worried - OneRepublic.m4a")
