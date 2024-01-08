@@ -3,16 +3,17 @@
 #include<algorithm>
 #include<vector>
 #include<ctime>
-#include<windows.h>
 #include<chrono>
 #include<cstdlib>
+#include<windows.h>
 using namespace std;
 
 void rendervisual(vector<int>& data){
+	char block=219;
 	std::cout << "\033[2J\033[H";
 		for(int i=0; i<20; i++){
 			for(int j=0; j<data[i]; j++){
-				cout<<"#";
+				cout<<block;
 			}
 			cout<<endl;
 		}
