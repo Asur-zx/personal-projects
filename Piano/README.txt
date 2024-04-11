@@ -1,0 +1,8 @@
+-88 keys : 52 white and 36 black
+-lowest A0 27.5 hz to highest c8 4186hz
+-each sound contains fundamental frequency(pitch) and harmonics(overtunes) to contribute to rich tones
+-to imitate the sound, there is to be clear sound to hammer striking and a sustained tone
+-have to create mixture of different frequencies
+-combination of sine waves and additional frequencies at integer multiple of higher frequncies
+-eg: for middle c or c4 at 261.63hz, create a wave of 261.63 hz and harmonics of 523.25 hz and 748.88hz
+-other possibilities are sinewave square, sawtooth and sound may be attack, sustain and decay
