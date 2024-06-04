@@ -1,14 +1,16 @@
-pub mod basics {
-    pub struct Information<'a>{
-        url: &'a str,
-        username: &'a str,
+    pub struct Information<>{
+        name: String,
+        url: String,
+        username: String,
         password: String,
         notes: String,
 
     }
-    impl<'a> Information<'a>{
-        pub fn new(url: &'a str, username: &'a str, password: String, notes: String)->Self{
+
+    impl<> Information<>{
+        pub fn new(name: String, url: String, username: String, password: String, notes: String)->Self{
             Self{
+                name,
                 url,
                 username,
                 password,
@@ -23,28 +25,28 @@ pub mod basics {
             self.notes=new_notes;
         }
         pub fn display_info(&self) {
+            println!("Name: {}", self.name);
             println!("URL: {}", self.url);
             println!("Username: {}", self.username);
             println!("Password: {}", self.password);
             println!("Notes: {}", self.notes);
         }
-        pub fn is_valid_password(&self, pword: &str)->bool{
+        pub fn is_valid_password(&self, pword: String)->bool{
             self.password==pword
         }
-        pub fn get_uname(&self)->&str{
-            return self.username;
+        pub fn get_name(&self)->String{
+            return self.name.clone();
         }
-        pub fn get_url(&self)->&str{
-            return self.url;
+        pub fn get_uname(&self)->String{
+            return self.username.clone();
+        }
+        pub fn get_url(&self)->String{
+            return self.url.clone();
         }
         pub fn get_pword(&self)->String{
-            return self.password;
-        }
+            return self.password.clone();
+    }
         pub fn get_notes(&self)->String{
-            return self.notes;
+            return self.notes.clone();
         }
     }
-
-}
-
-
